@@ -1,5 +1,5 @@
-﻿
-/* Table*/
+
+/* Tables*/
 SELECT *
 FROM dbo.hotel_guest_booking;
 SELECT *
@@ -7,7 +7,7 @@ FROM service_usage_info;
 SELECT *
 FROM payment_table;
 
---Check Data Type
+/* Check Data Type */
 select column_name, data_type
 from information_schema.COLUMNS
 where table_name = 'hotel_guest_booking' and table_schema = 'dbo';
@@ -59,7 +59,7 @@ ORDER BY  booking_id asc;
 
 SELECT *
 FROM service_usage_info
-WHERE booking_id IN (488, 947, 1765,2062, 2514, 1661,  2547,  4789, 4992, 2353) -- No: 488 & 2353
+WHERE booking_id IN (488, 947, 1765,2062, 2514, 1661,  2547,  4789, 4992, 2353) -- No: 488 
 ORDER BY booking_id asc;
 
 ALTER TABLE hotel_guest_booking
@@ -159,7 +159,6 @@ WHERE booking_id IN (
  4038, 1985, 4655, 4789, 2376, 4992, 4633, 4328, 3425, 4611,
  236, 4688, 4475, 2340);
 
-
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 /* Booking Flag: Double Booking cho các trường hợp có khách hàng sau đến check-in 
 khi thời gian cư trú của khách hàng trước vẫn còn */
@@ -176,14 +175,27 @@ and b1.check_in < b2.check_out
 and b2.check_in < b1.check_out
 and b1.updated_booking_status = 'Confirmed'
 and b2.updated_booking_status  = 'Confirmed'
-where b1.booking_flag = 'Double Booking' --room_number = ??
+where b1.booking_flag = 'Double Booking'
 );
-
-select *
-from hotel_guest_booking
-where booking_flag = 'Double Booking'
-order by room_number, check_in asc;
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 /* Update  Room Status của từng room_number dựa trên check_in và updated_booking_status 
 2 trạng thái cho room_status = 'Booked' || 'Available' */
+select	booking_id, customer_id, room_id,
+		check_in, check_out,
+		updated_booking_status,
+		updated_room_status
+from hotel_guest_booking
+order by check_in, room_number asc;
+
+ALTER TABLE hotel_guest_booking
+ADD updated_room_status VARCHAR(50);
+
+UPDATE hotel_guest_booking
+SET updated_room_status = (
+	CASE
+			WHEN updated_booking_status = 'Confirmed' then 'Booked'
+			WHEN updated_booking_status = 'Pending' then 'Availabel'
+			ELSE 'Available' END);
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
