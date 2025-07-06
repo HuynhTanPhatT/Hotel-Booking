@@ -1,5 +1,5 @@
 
-/* Tables*/
+/* Tables */
 SELECT *
 FROM dbo.hotel_guest_booking;
 SELECT *
@@ -20,7 +20,7 @@ select column_name, data_type
 from INFORMATION_SCHEMA.COLUMNS
 where table_name = 'payment_table' and TABLE_SCHEMA = 'dbo';
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-/* Xác định các trường hợp trong một ngày cùng 1 phòng có 2 hoặc hơn lượng bookings */
+/* Identify cases where the same room number has more than 2 bookings on the same day */
 with filter_conf as (
 SELECT	
 		H1.full_name, 
@@ -51,7 +51,7 @@ WHERE count_check_in_confirmed >=2
 ORDER BY check_in asc;
 
 
-/* Tạo bảng booking_flag - Gắn Flag Double Booking cho các trường hợp 1 ngày có 2 booking cùng 1 phòng */
+/* Create "booking_flag" column & Tag Double Booking for those above cases */
 SELECT *
 FROM payment_table
 WHERE booking_id IN (488, 947, 1765, 105, 4205, 2504, 4948, 2062, 2514, 3220, 1661, 3197, 2547, 2772, 4655, 4789, 2376, 4992, 2353, 2845)
@@ -73,50 +73,51 @@ WHERE booking_id IN (
 );
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-/* Pending & Cancelled có trong payment_table (2.694 rows) */
-SELECT	B1.payment_id, B2.customer_id, B1.booking_id, B2.room_id,
-		B1.payment_method, B2.status as booking_status , B2.room_status,
-		B2.check_in, B2.check_out, datediff(day, B2.check_in, B2.check_out) as stay_duration, B1.payment_date,
-		B2.room_number, B2.room_type, B2.price_per_night, B1.amount, B3.service_name, B2.booking_flag
-FROM payment_table B1
-JOIN hotel_guest_booking  B2
-ON B1.booking_id = B2.booking_id
-JOIN service_usage_info B3
-ON B1.booking_id = B3.booking_id
-WHERE B2.status <> 'Confirmed' 
-ORDER BY  B2.customer_id, B2.check_in asc;
+/* Pending & Cancelled status but recorded using service 
+	(5,286 rows & 2,507 Unique Booking_ID ) */
+SELECT	PT.payment_id, HGB.customer_id, HGB.booking_id, HGB.room_id,
+		PT.payment_method, HGB.status as booking_status,
+		HGB.check_in, HGB.check_out, PT.payment_date,
+		HGB.price_per_night, SUI.service_name, SUI.price, PT.amount as paid
+FROM service_usage_info SUI
+LEFT JOIN payment_table PT
+ON SUI.booking_id = PT.booking_id
+JOIN hotel_guest_booking HGB
+ON SUI.booking_id = HGB.booking_id
+WHERE HGB.status <> 'Confirmed' --and HGB.booking_id = 1
+ORDER BY  HGB.customer_id, HGB.check_in asc;
 
 
-/* Đánh dấu lại các booking_id này vào bảng hotel_guest_booking */
---1.110 Unique ID
+/* Flag those Booking ID in the hotel_guest_booking table */
 UPDATE hotel_guest_booking
 SET booking_flag = 'Pending/Cancelled But Paid'
-WHERE booking_id in (	SELECT	B1.booking_id
-						FROM payment_table B1
-						JOIN hotel_guest_booking  B2
-						ON B1.booking_id = B2.booking_id
-						JOIN service_usage_info B3
-						ON B1.booking_id = B3.booking_id
-						WHERE B2.status <> 'Confirmed');
+WHERE booking_id in (	SELECT	 distinct(HGB.booking_id)
+						FROM service_usage_info SUI
+						LEFT JOIN payment_table PT
+						ON SUI.booking_id = PT.booking_id
+						JOIN hotel_guest_booking HGB
+						ON SUI.booking_id = HGB.booking_id
+						WHERE HGB.status <> 'Confirmed');
 
-
-/* Thêm 1 cột updated_booking status */
+/* Update Booking Status */
 ALTER TABLE hotel_guest_booking
 ADD updated_booking_status VARCHAR(50);
 
 UPDATE hotel_guest_booking
 SET updated_booking_status = 
 	(CASE
-		WHEN booking_id IN (SELECT	B1.booking_id
-							FROM service_usage_info B1
-							JOIN hotel_guest_booking B2
-							ON B1.booking_id  = B2.booking_id
-							WHERE B2.booking_flag = 'Pending/Cancelled But Paid') then 'Confirmed'
+		WHEN booking_id IN (	SELECT	 distinct(HGB.booking_id)
+								FROM service_usage_info SUI
+								LEFT JOIN payment_table PT
+								ON SUI.booking_id = PT.booking_id
+								JOIN hotel_guest_booking HGB
+								ON SUI.booking_id = HGB.booking_id
+								WHERE HGB.status <> 'Confirmed') then 'Confirmed'
 	ELSE  hotel_guest_booking.status END);
+
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-/* Kiểm tra lại  các trường hợp trong một ngày cùng 1 phòng có 2 hoặc hơn lượng bookings
-sau khi tạo cột updated_booking_status */
---48 rows - 24 cases
+/* Recheck Double Booking cases after updating booking status \
+	( 105 rows - 52 cases) */
 WITH filter_conf as (
 SELECT	
 		H1.full_name, 
@@ -148,20 +149,22 @@ WHERE count_check_in_confirmed >=2
 ORDER BY check_in asc;
 
 
-/*Bởi vì đã cập nhật lại cột booking_status mới -> cho nên là sẽ có thể xuất hiện các trường hợp double booking mới 
-- Trước tiên mình sẽ update lại trạng thái booking_flag */
 UPDATE hotel_guest_booking
 SET booking_flag = 'Double Booking'
 WHERE booking_id IN (
- 105, 1765, 4205, 2504, 840, 1336, 2485, 4899, 3921, 7,
- 2062, 4948, 1419, 1453, 3220, 2514, 4598, 601, 1000, 4009,
- 1619, 3775, 3246, 4733, 1661, 3197, 882, 1929, 2547, 2772,
- 4038, 1985, 4655, 4789, 2376, 4992, 4633, 4328, 3425, 4611,
- 236, 4688, 4475, 2340);
+  488, 947, 105, 1765, 3452, 3558, 4, 1494, 3954, 4158, 4205, 2504, 2693, 3308, 1336, 840,
+  2485, 4899, 3921, 7, 2004, 4043, 2253, 3538, 3496, 736, 845, 4344, 4948, 3974, 2062, 1419,
+  1453, 2514, 3220, 4598, 601, 1000, 4009, 1619, 3775, 3246, 4733, 1322, 4175, 3757, 921, 543,
+  1679, 1661, 3197, 3025, 3935, 4571, 4409, 4829, 3112, 882, 1929, 4979, 4672, 2547, 2772,
+  2977, 4115, 4038, 1985, 156, 3433, 369, 2043, 2271, 2305, 2109, 2921, 4655, 4789, 4123, 694,
+  4047, 2983, 1522, 2892, 2376, 4992, 4633, 4328, 3603, 932, 2502, 1894, 3425, 4611, 3091,
+  4005, 1787, 545, 666, 827, 2845, 2353, 236, 4688, 4475, 2340
+)
+
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-/* Booking Flag: Double Booking cho các trường hợp có khách hàng sau đến check-in 
-khi thời gian cư trú của khách hàng trước vẫn còn */
+/* A Double Booking Flag:  double booking happens 
+when the second guest arrives before the first guest has checked out*/
 
 UPDATE hotel_guest_booking
 SET booking_flag = 'Double Booking'
@@ -175,12 +178,10 @@ and b1.check_in < b2.check_out
 and b2.check_in < b1.check_out
 and b1.updated_booking_status = 'Confirmed'
 and b2.updated_booking_status  = 'Confirmed'
-where b1.booking_flag = 'Double Booking'
 );
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-/* Update  Room Status của từng room_number dựa trên check_in và updated_booking_status 
-2 trạng thái cho room_status = 'Booked' || 'Available' */
+/* Update  Room Status: Booked|| Available */
 select	booking_id, customer_id, room_id,
 		check_in, check_out,
 		updated_booking_status,
@@ -195,7 +196,6 @@ UPDATE hotel_guest_booking
 SET updated_room_status = (
 	CASE
 			WHEN updated_booking_status = 'Confirmed' then 'Booked'
-			WHEN updated_booking_status = 'Pending' then 'Availabel'
+			WHEN updated_booking_status = 'Pending' then 'Available'
 			ELSE 'Available' END);
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
