@@ -51,31 +51,44 @@ GROUP BY room_type;
  /* % Occupancy Rate by Date */
 /* Check In < Check Out => Check In + 1 Until Check Out - Check In = 1 */
 WITH expand_booking_by_date as (
-		SELECT	booking_id, room_number,
-				check_in, 
-				check_in as curr_check_in, --Thời điểm bắt đầu của một BookingID
-				check_out,
-				DATEDIFF(DAY, check_in,check_out) as stay_duration
-		FROM hotel_guest_booking
-		WHERE (updated_booking_status = 'Confirmed')
-		AND (booking_flag is null or booking_flag <> 'Double Booking')
-	UNION ALL
-		SELECT	booking_id,room_number,
-				check_in,
-				DATEADD(DAY,1,curr_check_in) as occupied_check_in_by_bookingID, -- Tăng Ngày + 1 , nếu đáp ứng điều kiện < hơn Check Out hiện tại 1 ngày 
-				check_out,
-				stay_duration
-		FROM expand_booking_by_date 
-		WHERE curr_check_in < DATEADD(day,-1,check_out) -- Dừng đến khi Check Out > Check In 1 ngày 
+SELECT	booking_id, room_number, room_type,
+		check_in, 
+		check_in as curr_check_in, --Thời điểm bắt đầu của một BookingID && + 1 row khi < check out 1 ngày 
+		check_out,
+		DATEDIFF(DAY, check_in,check_out) as stay_duration
+FROM hotel_guest_booking
+WHERE (updated_booking_status = 'Confirmed')
+AND (booking_flag is null or booking_flag <> 'Double Booking')
+UNION ALL
+SELECT	booking_id,room_number, room_type,
+		check_in,
+		DATEADD(DAY,1,curr_check_in) as occupied_check_in_by_bookingID, -- Tăng Ngày + 1 , nếu đáp ứng điều kiện < hơn Check Out hiện tại 1 ngày 
+		check_out,
+		stay_duration
+FROM expand_booking_by_date 
+WHERE curr_check_in < DATEADD(day,-1,check_out) -- Dừng đến khi Check Out > Check In 1 ngày 
+),
+daily_booked_by_check_in as ( --Số phòng đã bán vào từng ngày / trên từng loại phòng 
+SELECT	curr_check_in,	
+		room_type,
+		count(distinct room_number) as occupied_rooms -- Đếm số phòng bị chiếm trong ngày 
+FROM expand_booking_by_date  --Không thể có số phòng giống nhau bởi vì đã lọc Double Booking
+GROUP BY curr_check_in, room_type
+),
+total_available_room_segment as (
+SELECT	room_type,		--Tránh việc để cố định phòng là 200 
+		count(room_type) as available_rooms --Đếm tổng số lượng phòng của từng loại phòng 
+FROM room_table
+GROUP BY room_type
 )
-SELECT *
-FROM expand_booking_by_date
-ORDER BY check_in asc;
-/*SELECT	curr_check_in,
-		COUNT(curr_check_in) as occupied_rooms_by_date,
-		(SELECT COUNT(*) FROM room_table) as total_available_rooms,
-		(COUNT(curr_check_in) * 100.0 / (SELECT COUNT(*) FROM room_table)) as occupancy_rate
-FROM expand_booking_by_date
-GROUP BY curr_check_in
-ORDER BY curr_check_in asc;*/
+SELECT	dbb.curr_check_in,
+		dbb.room_type,
+		dbb.occupied_rooms, -- Số phòng đã bán 
+		tar.available_rooms, -- Tổng số phòng có sẵn 
+		round((cast(dbb.occupied_rooms as float) / tar.available_rooms),2) as occupancy_rate -- Chuyển đổi pct bên PBi cho dễ
+FROM daily_booked_by_check_in dbb
+JOIN total_available_room_segment  tar
+ON dbb.room_type = tar.room_type
+ORDER BY dbb.curr_check_in
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
