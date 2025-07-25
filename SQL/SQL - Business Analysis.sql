@@ -26,28 +26,6 @@ group by room_type;
 	Suite			41 
 	Total			200  */
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-/* ADR by Room Type */
-WITH ADR as (
-SELECT	room_type,
-		datediff(day,check_in, check_out) as stay_duration,
-		price_per_night, updated_booking_status
-FROM hotel_guest_booking
-WHERE booking_flag is  null or booking_flag <> 'Double Booking' 
-), 
-ADR_room as (
-SELECT	room_type,
-		price_per_night, stay_duration, 
-		stay_duration * price_per_night  as booking_revenue
-FROM ADR
-WHERE updated_booking_status = 'Confirmed' 
-)
-SELECT	room_type, 
-		sum(booking_revenue) as room_revenue, 
-		count(*) as sold_rooms,
-		sum(booking_revenue) / count(*) as ADR
-FROM ADR_room
-GROUP BY room_type;
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  /* % Occupancy Rate by Date */
 /* Check In < Check Out => Check In + 1 Until Check Out - Check In = 1 */
 WITH expand_booking_by_date as (
@@ -91,4 +69,6 @@ JOIN total_available_room_segment  tar
 ON dbb.room_type = tar.room_type
 ORDER BY dbb.curr_check_in
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 
