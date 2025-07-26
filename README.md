@@ -6,8 +6,14 @@
 - Target: Hotel Management Team
 - Area: VietNam
 # Dataset Overview
-- There are 6 dataset providing insights into several booking-related variables, such as booking status (cancelled, pending bookings, confirmed bookings) , room status (booked, available) , room & service prices ,etc. Other data includes information about customer information, check in and check out, also  the type of deposite made,...
+
 # Data processing
 Data Anomoly by SQL:
 1. Identify cases where the same room number has more than 2 bookings on the same day
 2. double booking happens when the second guest arrives before the first guest has checked out
+
+# Key Insights
+
+# Recommendations
+
+# Conclusion
