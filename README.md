@@ -18,9 +18,8 @@
 - Employ some several DAX formulas to calculate **key performance indicators** (KPIs):
 <details>
   <summary>Click to view examples of DAX formulas</summary>
-- Gross Revenue: The total revenue of room and service:
-1_Gross Revenue = 
-VAR booking_revenue = 
+- Gross Revenue: The total revenue of room and service
+<pre>```VAR booking_revenue = 
 CALCULATE(
     SUMX(booking_table,
     booking_table[price_per_night] * booking_table[stay_duration]))
@@ -29,7 +28,9 @@ CALCULATE(
     SUMX(detailed_service_usage_table,
     detailed_service_usage_table[price] * detailed_service_usage_table[quantity]))
 RETURN 
-booking_revenue + ancillary_revenue
+booking_revenue + ancillary_revenue```</pre>
+
+
 
 # Key Insights
 
