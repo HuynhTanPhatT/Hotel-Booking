@@ -16,7 +16,9 @@
 - Double booking happens when the second guest arrives before the first guest has checked out
 3. Dax Calculations
 - Employ some several DAX formulas to calculate **key performance indicators** (KPIs):
-<summary> Click to view examples of DAX formulas </summary>
+<summary>Click to view examples of DAX formulas</summary>
+
+
 # Key Insights
 
 # Recommendations
