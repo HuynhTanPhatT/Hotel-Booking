@@ -8,7 +8,7 @@
 # Dataset Overview
 - There are 6 tables in a dataset providing insights into booking-related variables ( Confirmed, Pending, Cancelled Bookings), the type of deposite made (Bank Transfer, Cash, Credit Card, Crypto, Paypal) and  Check-in&out date. Additionally, other informations about customer: Phone, Email,...
 # Data processing
-1. Create a general table and Merge Tables by SQL
+1. Create general tables and merge Tables by SQL
 - "hotel_guest_booking": booking_table + room_table + service_table
 - "service_usage_info": service_usage_table + service_table
 2. Data Anomaly by SQL
