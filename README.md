@@ -32,7 +32,7 @@ CALCULATE(
 RETURN 
 booking_revenue + ancillary_revenue</pre>
 
-
+</details>
 
 # Key Insights
 
