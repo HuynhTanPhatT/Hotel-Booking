@@ -32,7 +32,7 @@ CALCULATE(
     SUMX(detailed_service_usage_table,
     detailed_service_usage_table[price] * detailed_service_usage_table[quantity]))
 RETURN 
-booking_revenue + ancillary_revenue</pre>
+booking_revenue + ancillary_revenue
 ```
 
 - **Cancelled Booking**: The number of cancelled bookings.
