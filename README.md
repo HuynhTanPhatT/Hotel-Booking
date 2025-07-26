@@ -24,6 +24,7 @@
 - **Gross Revenue**: The total revenue of room and service
 
 ```dax
+Gross Revenue = 
 VAR booking_revenue = 
 CALCULATE(
     SUMX(booking_table,
@@ -35,6 +36,68 @@ CALCULATE(
 RETURN 
 booking_revenue + ancillary_revenue</pre>
 ```
+
+- **Cancelled Booking**: The number of cancelled bookings.
+
+```dax
+Cancelled Bookings = 
+VAR cancellation = 
+CALCULATE(
+    COUNTROWS(booking_table),
+    FILTER(booking_table,
+    booking_table[booking_status] = "Cancelled" &&
+    (booking_table[booking_flag] <> "Double Booking" || ISBLANK(booking_table[booking_flag]))))
+RETURN
+- cancellation
+```
+
+- **Revenue Loss**: The loss of potential revenue from customer's cancellation
+
+```dax
+Revenue Loss = 
+VAR revenue_loss = 
+CALCULATE(
+    SUMX(booking_table,
+    booking_table[price_per_night] * booking_table[stay_duration]),
+    FILTER(booking_table, 
+    booking_table[booking_status] = "Cancelled" &&
+    (booking_table[booking_flag] <> "Double Booking" ||ISBLANK(booking_table[booking_flag]))
+    ))
+RETURN
+- revenue_loss
+```
+- **Avg. Length of Stay**: The stay duration of customers
+
+```dax
+Averge Length of Stay = 
+DIVIDE(
+    CALCULATE(SUM(booking_table[stay_duration]),
+    FILTER(booking_table,
+    (ISBLANK(booking_table[booking_flag]) || booking_table[booking_flag] <> "Double Booking") &&
+    booking_table[booking_status] = "Confirmed")),
+    CALCULATE(COUNTROWS(booking_table),
+    FILTER(booking_table,
+    booking_table[booking_status] = "Confirmed" &&
+    (ISBLANK(booking_table[booking_flag]) || booking_table[booking_flag] <> "Double Booking"))))
+```
+- **Occupancy Rate**:
+
+```dax
+% Occupancy Rate by date = 
+VAR total_occupied_rooms = sum('OR_room_type'[occupied_rooms])
+VAR total_available_rooms = 200
+VAR operation_days = total_available_rooms * DISTINCTCOUNT(OR_room_type[curr_check_in])
+RETURN
+DIVIDE(total_occupied_rooms,operation_days)
+
+% Occupancy Rate by Room Type = 
+VAR total_occupied_rooms = sum('OR_room_type'[occupied_rooms])
+VAR total_available_rooms = sum('OR_room_type'[available_rooms])
+RETURN
+DIVIDE(total_occupied_rooms,total_available_rooms)
+```
+
+
 </details>
 
 # Key Insights
