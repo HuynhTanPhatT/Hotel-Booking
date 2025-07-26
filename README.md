@@ -9,13 +9,13 @@
 - There are 6 tables in a dataset providing insights into booking-related variables ( Confirmed, Pending, Cancelled Bookings), the type of deposite made (Bank Transfer, Cash, Credit Card, Crypto, Paypal) and  Check-in&out date. Additionally, other informations about customer: Phone, Email,...
 # Data processing
 1. Create general tables and merge Tables by SQL
-- "hotel_guest_booking": booking_table + room_table + service_table
-- "service_usage_info": service_usage_table + service_table
+  - "hotel_guest_booking": booking_table + room_table + service_table
+  - "service_usage_info": service_usage_table + service_table
 2. Data Anomaly by SQL
-- Identify cases where the same room number has more than 2 bookings on the same day
-- Double booking happens when the second guest arrives before the first guest has checked out
+  - Identify cases where the same room number has more than 2 bookings on the same day
+  - Double booking happens when the second guest arrives before the first guest has checked out
 3. Dax Calculations
-- Employ some several DAX formulas to calculate **key performance indicators** (KPIs):
+  - Employ some several DAX formulas to calculate **key performance indicators** (KPIs):
 <details>
   <summary>Click to view examples of DAX formulas</summary>
 
@@ -80,7 +80,7 @@ DIVIDE(
     booking_table[booking_status] = "Confirmed" &&
     (ISBLANK(booking_table[booking_flag]) || booking_table[booking_flag] <> "Double Booking"))))
 ```
-- **Avg. Daily Rate**:
+- **Avg. Daily Rate**: Average revenue earned for an occupied room on a given day
 
 ```dax
 Avg Daily Rate (ADR) = DIVIDE(
