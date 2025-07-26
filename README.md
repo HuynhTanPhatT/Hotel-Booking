@@ -8,13 +8,15 @@
 # Dataset Overview
 - There are 6 tables in a dataset providing insights into booking-related variables ( Confirmed, Pending, Cancelled Bookings), the type of deposite made (Bank Transfer, Cash, Credit Card, Crypto, Paypal) and  Check-in&out date. Additionally, other informations about customer: Phone, Email,...
 # Data processing
-1. SQL
-a. Create & Merge Tables
-- Generating a common table by combining Customer Table & Booking Table & Room Table together (called) hotel_guest_booking
-b. Data Anomaly:
+1. Create a general table and Merge Tables by SQL
+- "hotel_guest_booking": booking_table + room_table + service_table
+- "service_usage_info": service_usage_table + service_table
+2. Data Anomaly by SQL
 - Identify cases where the same room number has more than 2 bookings on the same day
 - Double booking happens when the second guest arrives before the first guest has checked out
-2. PowerBi
+3. Dax Calculations
+- Employ some several DAX formulas to calculate **key performance indicators** (KPIs):
+<summary> Click to view examples of DAX formulas </summary>
 # Key Insights
 
 # Recommendations
