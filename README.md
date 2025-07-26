@@ -2,16 +2,14 @@
 <img width="1166" height="655" alt="image" src="https://github.com/user-attachments/assets/47fba6fb-ab9b-485e-bb49-51eb1141eda2" />
 
 # Introduction
-- This project presents PowerBi dashboards developed to analyze **hotel booking trends** and **suggest strategies** throughout insightful data. The dataset used for analyzing a Vietnam Hotel (called Hotel XYZ) a span of two years. Throught this analysis, the goal is to present a overview of booking behaviors, identify trends.
-- Target: Hotel Management Team
-- Area: VietNam
+- A hotel in Vietnam (called XYZ) faces business challenges over the past two years, especially about **Occupancy Rate**. By analyzing data, we can provide  **Hotel Mangement Team** with actionable strategies to improve the situation in 2025.
 # Dataset Overview
 - There are 6 tables in a dataset providing insights into booking-related variables ( Confirmed, Pending, Cancelled Bookings), the type of deposite made (Bank Transfer, Cash, Credit Card, Crypto, Paypal) and  Check-in&out date. Additionally, other informations about customer: Phone, Email,...
 # Data processing
-1. Create general tables and merge Tables by SQL
+1. Create general tables and merge them
   - "hotel_guest_booking": booking_table + room_table + service_table
   - "service_usage_info": service_usage_table + service_table
-2. Data Anomaly by SQL
+2. Data Anomaly
   - Identify cases where the same room number has more than 2 bookings on the same day
   - Double booking happens when the second guest arrives before the first guest has checked out
 3. Dax Calculations
