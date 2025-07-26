@@ -20,9 +20,11 @@
   <summary>Click to view examples of DAX formulas</summary>
 
   <br>
+
 - **Gross Revenue**: The total revenue of room and service
 
-<pre>VAR booking_revenue = 
+```dax
+VAR booking_revenue = 
 CALCULATE(
     SUMX(booking_table,
     booking_table[price_per_night] * booking_table[stay_duration]))
@@ -32,7 +34,7 @@ CALCULATE(
     detailed_service_usage_table[price] * detailed_service_usage_table[quantity]))
 RETURN 
 booking_revenue + ancillary_revenue</pre>
-
+```
 </details>
 
 # Key Insights
