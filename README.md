@@ -51,7 +51,7 @@ RETURN
 - cancellation
 ```
 
-- **Revenue Loss**: The loss of potential revenue from customer's cancellation
+- **Revenue Loss**: The loss of potential booking revenue from customer cancellations
 
 ```dax
 Revenue Loss = 
@@ -66,7 +66,7 @@ CALCULATE(
 RETURN
 - revenue_loss
 ```
-- **Avg. Length of Stay**: The stay duration of customers
+- **Avg. Length of Stay**: The average stay duration of customers
 
 ```dax
 Averge Length of Stay = 
@@ -80,7 +80,25 @@ DIVIDE(
     booking_table[booking_status] = "Confirmed" &&
     (ISBLANK(booking_table[booking_flag]) || booking_table[booking_flag] <> "Double Booking"))))
 ```
-- **Occupancy Rate**:
+- **Avg. Daily Rate**:
+
+```dax
+Avg Daily Rate (ADR) = DIVIDE(
+    CALCULATE(
+        SUMX(booking_table,
+        booking_table[price_per_night] * booking_table[stay_duration]),
+        FILTER(booking_table,
+        booking_table[booking_status] = "Confirmed" &&
+        (ISBLANK(booking_table[booking_flag]) || booking_table[booking_flag] <> "Double Booking"))),
+    CALCULATE(
+        SUMX(booking_table,
+        booking_table[stay_duration]),
+        FILTER(booking_table,
+        booking_table[booking_status] = "Confirmed" &&
+        (ISBLANK(booking_table[booking_flag]) ||booking_table[booking_flag] <> "Double Booking"))))
+```
+
+- **Occupancy Rate**: The ratio of rented or used space to the total amount of available space
 
 ```dax
 % Occupancy Rate by date = 
@@ -96,7 +114,6 @@ VAR total_available_rooms = sum('OR_room_type'[available_rooms])
 RETURN
 DIVIDE(total_occupied_rooms,total_available_rooms)
 ```
-
 
 </details>
 
