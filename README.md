@@ -16,8 +16,20 @@
 - Double booking happens when the second guest arrives before the first guest has checked out
 3. Dax Calculations
 - Employ some several DAX formulas to calculate **key performance indicators** (KPIs):
-<summary>Click to view examples of DAX formulas</summary>
-
+<details>
+  <summary>Click to view examples of DAX formulas</summary>
+- Gross Revenue: The total revenue of room and service:
+1_Gross Revenue = 
+VAR booking_revenue = 
+CALCULATE(
+    SUMX(booking_table,
+    booking_table[price_per_night] * booking_table[stay_duration]))
+VAR ancillary_revenue = 
+CALCULATE(
+    SUMX(detailed_service_usage_table,
+    detailed_service_usage_table[price] * detailed_service_usage_table[quantity]))
+RETURN 
+booking_revenue + ancillary_revenue
 
 # Key Insights
 
