@@ -21,6 +21,7 @@
 
   <br>
 - **Gross Revenue**: The total revenue of room and service
+
 <pre>VAR booking_revenue = 
 CALCULATE(
     SUMX(booking_table,
