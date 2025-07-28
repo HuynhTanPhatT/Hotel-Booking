@@ -18,7 +18,7 @@
 
   <br>
 
-- **Gross Revenue**: The total revenue of room and service
+- **Gross Revenue**:  Room Revenue + Service Revenue
 
 ```dax
 Gross Revenue = 
@@ -34,7 +34,7 @@ RETURN
 booking_revenue + ancillary_revenue
 ```
 
-- **Cancelled Booking**: The number of cancelled bookings.
+- **Cancelled Booking**: 
 
 ```dax
 Cancelled Bookings = 
@@ -63,7 +63,7 @@ CALCULATE(
 RETURN
 - revenue_loss
 ```
-- **Avg. Length of Stay**: The average stay duration of customers
+- **Avg. Length of Stay**: Total Number Of Room Nights / Total Number Of Bookings
 
 ```dax
 Averge Length of Stay = 
@@ -77,7 +77,7 @@ DIVIDE(
     booking_table[booking_status] = "Confirmed" &&
     (ISBLANK(booking_table[booking_flag]) || booking_table[booking_flag] <> "Double Booking"))))
 ```
-- **Avg. Daily Rate**: Average revenue earned for an occupied room on a given day
+- **Avg. Daily Rate**: Room Revenues / Room Sold
 
 ```dax
 Avg Daily Rate (ADR) = DIVIDE(
@@ -95,7 +95,7 @@ Avg Daily Rate (ADR) = DIVIDE(
         (ISBLANK(booking_table[booking_flag]) ||booking_table[booking_flag] <> "Double Booking"))))
 ```
 
-- **Occupancy Rate**: The ratio of rented or used space to the total amount of available space
+- **Occupancy Rate**:  Number of Occupied Rooms / Total Number of Available Rooms
 
 ```dax
 % Occupancy Rate by date = 
