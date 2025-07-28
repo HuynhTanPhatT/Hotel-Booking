@@ -112,7 +112,7 @@ VAR operation_days = available_rooms * CALCULATE(DISTINCTCOUNT('OR Table'[curr_c
 RETURN DIVIDE(total_occupied_rooms, operation_days)
 
 % Occupancy Rate by room_number = 
-VAR total_occupied_rooms = DISTINCTCOUNTNOBLANK('OR Table'[curr_check_in])
+VAR total_occupied_rooms = DISTINCTCOUNT('OR Table'[curr_check_in])
 VAR operation_days = datediff(MIN('Booking Table'[check_in]), max('Booking Table'[check_out]),DAY) 
 RETURN DIVIDE(total_occupied_rooms, operation_days)
 
