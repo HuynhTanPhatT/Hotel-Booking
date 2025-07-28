@@ -1,5 +1,4 @@
 # Hotel Booking Analysis - PowerBi Dashboard (02/2023 - 02/2025)
-<img width="1166" height="655" alt="image" src="https://github.com/user-attachments/assets/47fba6fb-ab9b-485e-bb49-51eb1141eda2" />
 
 # Introduction
 - A hotel in Vietnam (called XYZ) faces business challenges over the past two years, especially about **Occupancy Rate**. By analyzing data, we can provide  **Hotel Mangement Team** with actionable strategies to improve the situation in 2025.
@@ -100,17 +99,23 @@ Avg Daily Rate (ADR) = DIVIDE(
 
 ```dax
 % Occupancy Rate by date = 
-VAR total_occupied_rooms = sum('OR_room_type'[occupied_rooms])
-VAR total_available_rooms = 200
-VAR operation_days = total_available_rooms * DISTINCTCOUNT(OR_room_type[curr_check_in])
+VAR total_occupied_rooms = COUNTROWS('OR Table')
+VAR total_available_rooms = max('OR Table'[available_rooms])
+VAR operation_days = total_available_rooms * DISTINCTCOUNT('OR Table'[curr_check_in])
 RETURN
 DIVIDE(total_occupied_rooms,operation_days)
 
 % Occupancy Rate by Room Type = 
-VAR total_occupied_rooms = sum('OR_room_type'[occupied_rooms])
-VAR total_available_rooms = sum('OR_room_type'[available_rooms])
-RETURN
-DIVIDE(total_occupied_rooms,total_available_rooms)
+VAR total_occupied_rooms = COUNTROWS('OR Table')
+VAR available_rooms = MAX('OR Table'[available_room_types])
+VAR operation_days = available_rooms * CALCULATE(DISTINCTCOUNT('OR Table'[curr_check_in]))
+RETURN DIVIDE(total_occupied_rooms, operation_days)
+
+% Occupancy Rate by room_number = 
+VAR total_occupied_rooms = DISTINCTCOUNTNOBLANK('OR Table'[curr_check_in])
+VAR operation_days = datediff(MIN('Booking Table'[check_in]), max('Booking Table'[check_out]),DAY) 
+RETURN DIVIDE(total_occupied_rooms, operation_days)
+
 ```
 
 </details>
