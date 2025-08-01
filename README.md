@@ -99,22 +99,25 @@ Avg Daily Rate (ADR) = DIVIDE(
 
 ```dax
 % Occupancy Rate by date = 
-VAR total_occupied_rooms = COUNTROWS('OR Table')
-VAR total_available_rooms = max('OR Table'[available_rooms])
-VAR operation_days = total_available_rooms * DISTINCTCOUNT('OR Table'[curr_check_in])
-RETURN
-DIVIDE(total_occupied_rooms,operation_days)
+  VAR total_occupied_rooms = COUNTROWS('OR Table')
+  VAR total_available_rooms = max('OR Table'[available_rooms])
+  VAR operation_days = total_available_rooms * DISTINCTCOUNT('OR Table'[curr_check_in])
+  RETURN
+  DIVIDE(total_occupied_rooms,operation_days)
 
 % Occupancy Rate by Room Type = 
-VAR total_occupied_rooms = COUNTROWS('OR Table')
-VAR available_rooms = MAX('OR Table'[available_room_types])
-VAR operation_days = available_rooms * CALCULATE(DISTINCTCOUNT('OR Table'[curr_check_in]))
-RETURN DIVIDE(total_occupied_rooms, operation_days)
+  VAR total_occupied_rooms = COUNTROWS('OR Table')
+  VAR available_rooms = MAX('OR Table'[available_room_types])
+  VAR operation_days = available_rooms * CALCULATE(DISTINCTCOUNT('OR Table'[curr_check_in]))
+  RETURN DIVIDE(total_occupied_rooms, operation_days)
 
 % Occupancy Rate by room_number = 
-VAR total_occupied_rooms = DISTINCTCOUNT('OR Table'[curr_check_in])
-VAR operation_days = datediff(MIN('Booking Table'[check_in]), max('Booking Table'[check_out]),DAY) 
-RETURN DIVIDE(total_occupied_rooms, operation_days)
+  VAR total_occupied_rooms = COUNTROWS('OR Table') 
+  VAR operation_days = 
+    CALCULATE(
+        DISTINCTCOUNT('Dim Date'[Date]) * COUNTROWS(VALUES('OR Table'[room_number])))
+  RETURN DIVIDE(total_occupied_rooms, operation_days)
+
 
 ```
 
