@@ -47,28 +47,32 @@ FROM expand_booking_by_date
 WHERE curr_check_in < DATEADD(day,-1,check_out) -- Dừng đến khi Check Out > Check In 1 ngày 
 ),
 daily_booked_by_check_in as ( --Số phòng đã bán vào từng ngày / trên từng loại phòng 
-SELECT	curr_check_in,	
+SELECT	booking_id,
+		check_in,
+		curr_check_in,	
+		check_out,
 		room_type,
-		count(distinct room_number) as occupied_rooms -- Đếm số phòng bị chiếm trong ngày 
+		room_number -- Đếm số phòng bị chiếm trong ngày 
 FROM expand_booking_by_date  --Không thể có số phòng giống nhau bởi vì đã lọc Double Booking
-GROUP BY curr_check_in, room_type
 ),
 total_available_room_segment as (
-SELECT	room_type,		--Tránh việc để cố định phòng là 200 
-		count(room_type) as available_rooms --Đếm tổng số lượng phòng của từng loại phòng 
+SELECT	room_type,
+		count(room_number) as room_type_rooms
 FROM room_table
 GROUP BY room_type
 )
-SELECT	dbb.curr_check_in,
+SELECT	dbb.booking_id,
+		check_in,
+		dbb.curr_check_in,
+		dbb.check_out,
 		dbb.room_type,
-		dbb.occupied_rooms, -- Số phòng đã bán 
-		tar.available_rooms, -- Tổng số phòng có sẵn 
-		round((cast(dbb.occupied_rooms as float) / tar.available_rooms),2) as occupancy_rate -- Chuyển đổi pct bên PBi cho dễ
+		tar.room_type_rooms, -- Tổng số phòng có sẵn 
+		dbb.room_number,
+		(SELECT count(*) FROM room_table) as available_rooms --  Đếm tổng số lượng phòng của từng loại phòng 
 FROM daily_booked_by_check_in dbb
 JOIN total_available_room_segment  tar
 ON dbb.room_type = tar.room_type
-ORDER BY dbb.curr_check_in
+ORDER BY dbb.curr_check_in;
+
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
 
