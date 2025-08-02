@@ -117,8 +117,6 @@ Avg Daily Rate (ADR) = DIVIDE(
     CALCULATE(
         DISTINCTCOUNT('Dim Date'[Date]) * COUNTROWS(VALUES('OR Table'[room_number])))
   RETURN DIVIDE(total_occupied_rooms, operation_days)
-
-
 ```
 
 </details>
