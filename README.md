@@ -2,7 +2,7 @@
 # Introduction
 - A hotel in Vietnam (called XYZ) faces business challenges over the past two years, especially about **Occupancy Rate**. By analyzing data, we can provide  **Hotel Mangement Team** with actionable strategies to improve the situation in 2025.
 # Dataset Overview
-- There are 6 tables in a dataset providing insights into booking-related variables ( Confirmed, Pending, Cancelled Bookings), the type of deposite made (Bank Transfer, Cash, Credit Card, Crypto, Paypal) and  Check-in&out date. Additionally, other informations about customer: Phone, Email,...
+- The dataset contains 6 tables providing insights into booking-related variables (Cofirmed, Pending, Cancelled Bookings), check-in and check-out dates, and customer information such as (Phone, Email). Additionally, it includes **service-related details** (service price, payment type, usage) and **room-related details** (price per night, room type, room number).
 # Data processing
 1. Create general tables and merge them
   - "hotel_guest_booking": booking_table + room_table + service_table
@@ -121,9 +121,7 @@ Avg Daily Rate (ADR) = DIVIDE(
 </details>
 
 # Key Insights
-<img width="1158" height="651" alt="image" src="https://github.com/user-attachments/assets/2769a067-e898-418a-b0a0-b194877e9797" />
 
-<img width="1162" height="653" alt="image" src="https://github.com/user-attachments/assets/cc6240f5-506b-4255-ae62-ac67bb60fa6e" />
 
 # Recommendations
 
