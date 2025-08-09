@@ -1,5 +1,9 @@
 # Hotel Booking Analysis - PowerBi Dashboard (02/2023 - 02/2025)
-
+<p align="center">
+  <img src="<img width="1158" height="654" alt="image" src="https://github.com/user-attachments/assets/ada755a4-3a49-43a8-a7c2-c9400e51302a" />" width="30%">
+  <img src="image2.png" width="30%">
+  <img src="image3.png" width="30%">
+</p>
 # Introduction
 - A hotel in Vietnam (called XYZ) faces business challenges over the past two years, especially about **Occupancy Rate**. By analyzing data, we can provide  **Hotel Mangement Team** with actionable strategies to improve the situation in 2025.
 # Dataset Overview
