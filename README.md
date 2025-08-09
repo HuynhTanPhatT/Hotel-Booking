@@ -117,11 +117,18 @@ Avg Daily Rate (ADR) = DIVIDE(
 
 </details>
 
-# Key Insights
-
+# Key Insights 
+1. **Bookings**: Customer tends to book a room in the half year later (especially on Summer or Winter). However, these months often have higher cancellation than others
+2. **Gross Revenue**: Các tháng 6,7,9,12 có lượng doanh thu ổn định và vượt mức trung bình trong 2 năm. Tháng 5 vừa thấp  về lượt đặt phòng  mà còn cả ở doanh thu. Điều này có thể đến từ việc sắp vào mùa cao điểm, nên Khách Hàng không có xu hướng đặt phòng vào tháng 5.
+3. **Occupancy Rate**: 
+1. Phòng không bán được → Tận dụng kém tài nguyên
+2. ADR cao/thấp không phải vấn đề → Vấn đề là không tận dụng mùa cao điểm
+3. Phòng bán không hiệu quả hoặc sai thời điểm
+Root Cause: the %Occupancy is low, not because of ADR or Cancelled Bookings, bookings and sold room are low - appropriate selling for room number => miss the increase %OR and revenue in peak seasoa
 
 # Recommendations
-
+- Hotel Management:
+  1. 
 # Conclusion
 
 <img width="1164" height="655" alt="image" src="https://github.com/user-attachments/assets/02981cc5-6826-4c4f-a3e0-c6f7685a07d5" />
