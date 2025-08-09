@@ -10,15 +10,6 @@ Using SQL to detect `Data Anomalies`
   - Identify cases where the second guest checks in before the first guest has checked out => 🚩Flag: Double Booking
 
 # Metrics Formula & DAX Calculations
-<details>
-  <summary>Click to view the formula</summary>
-
-  <br>
-- **Occupancy Rate (%OR) =  Rooms Sold / Room Available
-- **Avg. Length of Stay**: Total Number Of Room Nights / Total Number Of Bookings
-- **Avg. Daily Rate**: Room Revenues / Room Sold
-</details>
-
 Employ some several DAX formulas to calculate **key performance indicators** (KPIs):
 <details>
   <summary>Click to view examples of DAX formulas</summary>
@@ -69,7 +60,7 @@ CALCULATE(
 RETURN
 - revenue_loss
 ```
-- **Avg. Length of Stay**:
+- **Avg. Length of Stay**: Total Number Of Room Nights / Total Number Of Bookings
 
 ```dax
 Averge Length of Stay = 
@@ -83,7 +74,7 @@ DIVIDE(
     booking_table[booking_status] = "Confirmed" &&
     (ISBLANK(booking_table[booking_flag]) || booking_table[booking_flag] <> "Double Booking"))))
 ```
-- **Avg. Daily Rate**:
+- **Avg. Daily Rate**: Room Revenues / Room Sold
 ```dax
 Avg Daily Rate (ADR) = DIVIDE(
     CALCULATE(
@@ -100,7 +91,7 @@ Avg Daily Rate (ADR) = DIVIDE(
         (ISBLANK(booking_table[booking_flag]) ||booking_table[booking_flag] <> "Double Booking"))))
 ```
 
-- **Occupancy Rate**: 
+- **Occupancy Rate**: Rooms Sold / Room Available
 
 ```dax
 % Occupancy Rate by date = 
