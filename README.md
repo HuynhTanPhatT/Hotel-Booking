@@ -121,6 +121,9 @@ Avg Daily Rate (ADR) = DIVIDE(
 </details>
 
 # Key Insights
+<img width="1158" height="651" alt="image" src="https://github.com/user-attachments/assets/2769a067-e898-418a-b0a0-b194877e9797" />
+
+<img width="1162" height="653" alt="image" src="https://github.com/user-attachments/assets/cc6240f5-506b-4255-ae62-ac67bb60fa6e" />
 
 # Recommendations
 
