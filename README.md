@@ -9,15 +9,23 @@ Using SQL to detect `Data Anomalies`
   - Detect bookings with **Pending** or **Cancelled** status that still show service usage in the hotel => Update Booking Status
   - Identify cases where the second guest checks in before the first guest has checked out => 🚩Flag: Double Booking
 
-# DAX Calculations & Explain Metrics
+# Metrics Formula & DAX Calculations
+<details>
+  <summary>Click to view the formula</summary>
+
+  <br>
+- **Occupancy Rate (%OR) =  Rooms Sold / Room Available
+- **Avg. Length of Stay**: Total Number Of Room Nights / Total Number Of Bookings
+- **Avg. Daily Rate**: Room Revenues / Room Sold
+</details>
+
 Employ some several DAX formulas to calculate **key performance indicators** (KPIs):
 <details>
   <summary>Click to view examples of DAX formulas</summary>
 
   <br>
 
-- **Gross Revenue**:  Room Revenue + Service Revenue
-
+- **Gross Revenue**:
 ```dax
 Gross Revenue = 
 VAR booking_revenue = 
@@ -46,7 +54,7 @@ RETURN
 - cancellation
 ```
 
-- **Revenue Loss**: The loss of potential booking revenue from customer cancellations
+- **Revenue Loss**:
 
 ```dax
 Revenue Loss = 
@@ -61,7 +69,7 @@ CALCULATE(
 RETURN
 - revenue_loss
 ```
-- **Avg. Length of Stay**: Total Number Of Room Nights / Total Number Of Bookings
+- **Avg. Length of Stay**:
 
 ```dax
 Averge Length of Stay = 
@@ -75,8 +83,7 @@ DIVIDE(
     booking_table[booking_status] = "Confirmed" &&
     (ISBLANK(booking_table[booking_flag]) || booking_table[booking_flag] <> "Double Booking"))))
 ```
-- **Avg. Daily Rate**: Room Revenues / Room Sold
-
+- **Avg. Daily Rate**:
 ```dax
 Avg Daily Rate (ADR) = DIVIDE(
     CALCULATE(
@@ -93,7 +100,7 @@ Avg Daily Rate (ADR) = DIVIDE(
         (ISBLANK(booking_table[booking_flag]) ||booking_table[booking_flag] <> "Double Booking"))))
 ```
 
-- **Occupancy Rate**:  Number of Occupied Rooms / Total Number of Available Rooms
+- **Occupancy Rate**: 
 
 ```dax
 % Occupancy Rate by date = 
