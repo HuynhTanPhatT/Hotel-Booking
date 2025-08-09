@@ -9,7 +9,7 @@ Using SQL to detect `Data Anomalies`
   - Detect bookings with **Pending** or **Cancelled** status that still show service usage in the hotel => Update Booking Status
   - Identify cases where the second guest checks in before the first guest has checked out => 🚩Flag: Double Booking
 
-# Metrics Formula & DAX Calculations
+# DAX Calculations & Formulas
 Employ some several DAX formulas to calculate **key performance indicators** (KPIs):
 <details>
   <summary>Click to view examples of DAX formulas</summary>
@@ -123,3 +123,8 @@ Avg Daily Rate (ADR) = DIVIDE(
 # Recommendations
 
 # Conclusion
+
+<img width="1164" height="655" alt="image" src="https://github.com/user-attachments/assets/02981cc5-6826-4c4f-a3e0-c6f7685a07d5" />
+
+<img width="1162" height="652" alt="image" src="https://github.com/user-attachments/assets/bad975b2-ac10-4cc1-91b2-d515f901309e" />
+
