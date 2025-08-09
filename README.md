@@ -10,7 +10,7 @@ Using SQL to detect `Data Anomalies`
   - Identify cases where the second guest checks in before the first guest has checked out => 🚩Flag: Double Booking
 
 # DAX Calculations & Explain Metrics
-  - Employ some several DAX formulas to calculate **key performance indicators** (KPIs):
+Employ some several DAX formulas to calculate **key performance indicators** (KPIs):
 <details>
   <summary>Click to view examples of DAX formulas</summary>
 
