@@ -4,13 +4,14 @@
 # Dataset Overview
 - The dataset contains 6 tables providing insights into booking-related variables (Cofirmed, Pending, Cancelled Bookings), check-in and check-out dates, and customer information such as (Phone, Email). Additionally, it includes **service-related details** (service price, payment type, usage) and **room-related details** (price per night, room type, room number).
 # Data processing
-1. Create general tables and merge them
-  - "hotel_guest_booking": booking_table + room_table + service_table
-  - "service_usage_info": service_usage_table + service_table
-2. Data Anomaly
-  - Identify cases where the same room number has more than 2 bookings on the same day
-  - Double booking happens when the second guest arrives before the first guest has checked out
-3. Dax Calculations
+1. Using SQL to detect `Data Anomalies`
+  - Identify **booking cases** where the same room number has more than `2 bookings` on the same day => 🚩Flag: Double Booking
+  - Detect bookings with **Pending** or **Cancelled** status that still show service usage in the hotel => Update Booking Status
+  - Identify cases where the second guest checks in before the first guest has checked out => 🚩Flag: Double Booking
+
+2. Using SQL to create an %Occupancy Table
+  - 
+4. Dax Calculations
   - Employ some several DAX formulas to calculate **key performance indicators** (KPIs):
 <details>
   <summary>Click to view examples of DAX formulas</summary>
